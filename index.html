@@ -1,36 +1,29 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mac Control PRO</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --bg: var(--tg-theme-bg-color, #f5f5f7);
-            --text: var(--tg-theme-text-color, #000);
-            --btn: var(--tg-theme-button-color, #007aff);
-            --btn-text: var(--tg-theme-button-text-color, #fff);
-        }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 400px; }
-        .btn { padding: 20px 10px; border: none; border-radius: 15px; background: var(--btn); color: var(--btn-text); font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn:active { transform: scale(0.95); opacity: 0.8; }
-        .btn.red { background: #ff3b30; }
-        .btn.orange { background: #ff9500; }
+        body { font-family: -apple-system, sans-serif; background: var(--tg-theme-bg-color, #f5f5f7); color: var(--tg-theme-text-color); display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 350px; }
+        .btn { padding: 15px; border: none; border-radius: 12px; background: var(--tg-theme-button-color, #007aff); color: var(--tg-theme-button-text-color, #fff); font-weight: bold; cursor: pointer; transition: 0.1s; }
+        .btn:active { transform: scale(0.96); }
         .full { grid-column: span 2; }
-        h1 { font-size: 20px; margin-bottom: 20px; }
+        .red { background: #ff3b30; }
+        .orange { background: #ff9500; }
+        h2 { margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <h1>Mac Controller PRO</h1>
+    <h2>Mac Control Center</h2>
     <div class="grid">
-        <button class="btn full" onclick="send('open_safari')">🌐 <span>Safari</span></button>
-        <button class="btn" onclick="send('screenshot')">📸 <span>Скриншот</span></button>
-        <button class="btn red" onclick="send('record')">🎥 <span>Запись 5с</span></button>
-        <button class="btn orange" onclick="send('vol_up')">🔊 <span>Громкость +</span></button>
-        <button class="btn orange" onclick="send('vol_down')">🔉 <span>Громкость -</span></button>
-        <button class="btn full" style="background: #5856d6;" onclick="send('sleep')">🌙 <span>Режим сна</span></button>
+        <button class="btn full" onclick="run('open_safari')">🌐 Открыть Safari</button>
+        <button class="btn" onclick="run('screenshot')">📸 Скриншот</button>
+        <button class="btn red" onclick="run('record')">🎥 Запись (5с)</button>
+        <button class="btn orange" onclick="run('vol_up')">🔊 Громкость +</button>
+        <button class="btn orange" onclick="run('vol_down')">🔉 Громкость -</button>
+        <button class="btn full" style="background:#5856d6;" onclick="run('sleep')">🌙 Режим сна</button>
     </div>
 
     <script>
@@ -38,9 +31,9 @@
         tg.ready();
         tg.expand();
 
-        function send(cmd) {
+        function run(command) {
             if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-            tg.sendData(cmd); // Это отправит текст боту и ЗАКРОЕТ Mini App
+            tg.sendData(command); // Отправляет данные и закрывает окно
         }
     </script>
 </body>
