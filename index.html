@@ -2,68 +2,141 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mac Control</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #f5f5f7);
+            --text-color: var(--tg-theme-text-color, #000000);
+            --button-color: var(--tg-theme-button-color, #007aff);
+            --button-text: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #ffffff);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color, #f0f0f2);
-            color: var(--tg-theme-text-color, #000);
+            font-family: -apple-system, system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            overflow: hidden;
         }
-        .card {
-            background: var(--tg-theme-secondary-bg-color, #fff);
-            border-radius: 15px;
-            padding: 20px;
-            width: 90%;
+
+        .container {
+            width: 100%;
             max-width: 400px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .card {
+            background: var(--secondary-bg);
+            border-radius: 18px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             margin-bottom: 20px;
         }
-        h2 { margin-top: 0; font-size: 1.2rem; text-align: center; }
+
         .btn {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+            height: 55px;
+            margin: 12px 0;
             border: none;
-            border-radius: 10px;
-            background-color: var(--tg-theme-button-color, #2481cc);
-            color: var(--tg-theme-button-text-color, #fff);
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 12px;
+            background-color: var(--button-color);
+            color: var(--button-text);
+            font-size: 17px;
+            font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.1s ease;
         }
-        .btn:active { opacity: 0.7; }
-        .btn.secondary { background-color: #ff9500; }
-        .status { font-size: 12px; color: gray; text-align: center; }
+
+        .btn:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
+
+        .btn-record {
+            background-color: #ff3b30; /* Красный цвет для записи */
+        }
+
+        .icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        #status {
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.6;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2>💻 Mac Remote Control</h2>
-        <button class="btn" onclick="sendCommand('open_safari')">🌐 Открыть Safari</button>
-        <button class="btn" onclick="sendCommand('screenshot')">📸 Сделать скриншот</button>
-        <button class="btn secondary" onclick="sendCommand('record')">🎥 Запись (5 сек)</button>
+    <div class="container">
+        <div class="header">
+            <h1>Mac Controller</h1>
+        </div>
+
+        <div class="card">
+            <button class="btn" onclick="send('open_safari')">
+                <span class="icon">🌐</span> Открыть Safari
+            </button>
+            
+            <button class="btn" onclick="send('screenshot')">
+                <span class="icon">📸</span> Сделать скриншот
+            </button>
+            
+            <button class="btn btn-record" onclick="send('record')">
+                <span class="icon">🎥</span> Запись экрана (5с)
+            </button>
+        </div>
+
+        <p id="status">Система готова</p>
     </div>
-    
-    <p class="status" id="status">Ожидание команды...</p>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Развернуть на весь экран
+        
+        // Инициализация
+        tg.ready();
+        tg.expand();
 
-        function sendCommand(command) {
-            document.getElementById('status').innerText = "Выполняю: " + command;
-            // Отправляем данные боту
-            tg.sendData(command); 
+        function send(command) {
+            document.getElementById('status').innerText = "Выполнение...";
+            
+            // Легкая вибрация при нажатии (Haptic Feedback)
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+
+            // Отправляем данные боту (это закроет Mini App)
+            setTimeout(() => {
+                tg.sendData(command);
+            }, 200);
         }
+
+        // Установка цвета хедера в стиле темы Telegram
+        tg.setHeaderColor('secondary_bg_color');
     </script>
 </body>
 </html>
